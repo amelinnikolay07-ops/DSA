@@ -1,14 +1,14 @@
 from collections import Counter
 
-wrd1 = input()
-wrd2 = input()
+a = input()
+b = input()
 
 
-if len(wrd1) != len(wrd2):
+if len(a) != len(b):
     print("NO")
 else:
 
-    if Counter(wrd1) == Counter(wrd2):
+    if Counter(a) == Counter(b):
         print("YES")
     else:
         print("NO")
