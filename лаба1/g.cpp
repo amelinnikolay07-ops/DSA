@@ -3,9 +3,11 @@
 #include <algorithm>
 #include <cmath>
 
-void countingSort(std::vector<int> &arr) {
-    int max = *std::max_element(arr.begin(), arr.end());
-    std::vector <int> count(max + 1);
+sing namespace std;
+
+void countingSort(vector<int> &arr) {
+    int max = *max_element(arr.begin(), arr.end());
+    vector <int> count(max + 1);
 
     for (int i = 0; i < arr.size(); i++) {
         count[arr[i]]++;
@@ -21,12 +23,12 @@ void countingSort(std::vector<int> &arr) {
 }
 
 int main(){
-    std::vector <int> arr;
+    vector <int> arr;
     int x;
     
-    while (std::cin >> x) {
+    while (cin >> x) {
         if (x < 0 || x > 100) {
-            std::exit(1);
+            exit(1);
         } else {
             arr.push_back(x);
         }
@@ -34,9 +36,9 @@ int main(){
 
     countingSort(arr);
     for (int i = 0; i < arr.size(); i++) {
-        std::cout << arr[i] << " ";
+        cout << arr[i] << " ";
     }
-    std::cout << std::endl;
+    cout << endl;
     
     return 0;
 }
