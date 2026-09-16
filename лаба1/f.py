@@ -1,4 +1,4 @@
-from random import *
+from random import randint
 
 def quick_sort(arr):
     if len(arr) <= 1:
