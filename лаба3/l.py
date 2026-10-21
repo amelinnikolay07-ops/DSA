@@ -1,26 +1,21 @@
-h = list(map(int, input().split()))
-n = h[0]
-h = h[1:]
+n, *a = map(int, input().split())
+
 stack = []
-res = 0
+ans = 0
+
+a.append(0)
 
 for i in range(n + 1):
-    if i < n:
-        a = h[i]
-    else:
-        a = 0
+    while stack and a[stack[-1]] > a[i]:
+        h = a[stack.pop()]
 
-    while len(stack) > 0 and h[stack[-1]] >= a:
-        b = h[stack.pop()]
-
-        if len(stack) > 0:
-            l = stack[-1]
+        if stack:
+            width = i - stack[-1] - 1
         else:
-            l = -1
+            width = i
 
-        c = i - l - 1
-        res = max(res, b * c)
+        ans = max(ans, h * width)
 
     stack.append(i)
 
-print(res)
+print(ans)
