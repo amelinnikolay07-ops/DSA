@@ -1,60 +1,42 @@
-
 class Node:
     def __init__(self, key):
         self.data = key
         self.left = None
         self.right = None
 
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
     def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
-            return
+        self.root = self._insert(self.root, key)
 
-        node = self.root
+    def _insert(self, node, key):
+        if node is None:
+            return Node(key)
+        if key < node.data:
+            node.left = self._insert(node.left, key)
+        elif key > node.data:
+            node.right = self._insert(node.right, key)
+        return node
 
-        while True:
-            if key < node.data:
-                if node.left is None:
-                    node.left = Node(key)
-                    return
-                node = node.left
+    def order_up(self):
+        return self._order_up(self.root)
 
-            elif key > node.data:
-                if node.right is None:
-                    node.right = Node(key)
-                    return
-                node = node.right
-
-            else:
-                return
-
-    def inorder(self):
-        stack = []
-        node = self.root
-
-        while stack or node is not None:
-            while node is not None:
-                stack.append(node)
-                node = node.left
-
-            node = stack.pop()
-            print(node.data)
-
-            node = node.right
+    def _order_up(self, node):
+        if node is None:
+            return []
+        return self._order_up(node.left) + [node.data] + self._order_up(node.right)
 
 
-tree = BinarySearchTree()
 
-numbers = list(map(int, input().split()))
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    numbers = list(map(int, input().split()))
+    for num in numbers:
+        if num == 0:
+            break
+        bst.insert(num)
 
-for x in numbers:
-    if x == 0:
-        break
-    tree.insert(x)
-
-tree.inorder()
+    res = bst.order_up()
+    print(*res, sep='\n')
