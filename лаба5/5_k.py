@@ -1,73 +1,79 @@
-
 class Node:
     def __init__(self, key):
         self.data = key
         self.left = None
         self.right = None
 
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
-    # Добавление элемента
     def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
-            return
+        self.root = self._insert(self.root, key)
 
-        node = self.root
+    def _insert(self, node, key):
+        if node is None:
+            return Node(key)
+        if key < node.data:
+            node.left = self._insert(node.left, key)
+        elif key > node.data:
+            node.right = self._insert(node.right, key)
+        return node
 
-        while True:
-            if key < node.data:
-                if node.left is None:
-                    node.left = Node(key)
-                    return
-                node = node.left
+    def search(self, key):
+        return self._search(self.root, key)
 
-            elif key > node.data:
-                if node.right is None:
-                    node.right = Node(key)
-                    return
-                node = node.right
+    def _search(self, node, key):
+        if node is None:
+            return False
+        if node.data == key:
+            return True
+        if key < node.data:
+            return self._search(node.left, key)
+        return self._search(node.right, key)
 
-            else:
-                return
+    def order_down(self):
+        return self._order_down(self.root)
 
-    # Поиск минимального элемента >= key
+    def _order_down(self, node):
+        if node is None:
+            return []
+        return self._order_down(node.right) + [node.data] + self._order_down(node.left)
+
     def next(self, key):
-        node = self.root
-        answer = -1
+        return self._next(self.root, key)
 
+    def _next(self, node, key):
+        candidate = None
         while node is not None:
             if node.data >= key:
-                answer = node.data
+                candidate = node.data
                 node = node.left
             else:
                 node = node.right
+        if candidate is None:
+            return -1
+        return candidate
 
-        return answer
 
 
-tree = BinarySearchTree()
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    n = int(input())
+    prev_op = None
+    prev_res = None
+    for _ in range(n):
+        op = input().split()
 
-n = int(input())
+        if op[0] == '?':
+            prev_res = bst.next(int(op[1]))
+            print(prev_res)
+        else:
+            if prev_op is None or (prev_op == '+'):
+                bst.insert(int(op[1]))
+            else:
+                bst.insert((int(op[1]) + prev_res)%(10**9))
 
-last_answer = 0
-last_was_query = False
 
-for _ in range(n):
-    command, x = input().split()
-    x = int(x)
+        prev_op = op[0]
 
-    if command == "+":
-        if last_was_query:
-            x = (x + last_answer) % 10**9
-
-        tree.insert(x)
-        last_was_query = False
-
-    else:
-        last_answer = tree.next(x)
-        print(last_answer)
-        last_was_query = True
