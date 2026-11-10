@@ -1,3 +1,5 @@
+from random import randint
+import queue
 
 class Node:
     def __init__(self, key):
@@ -5,58 +7,43 @@ class Node:
         self.left = None
         self.right = None
 
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
     def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
+        self.root = self._insert(self.root, key)
+
+    def _insert(self, node, key):
+        if node is None:
+            return Node(key)
+        if key < node.data:
+            node.left = self._insert(node.left, key)
+        elif key > node.data:
+            node.right = self._insert(node.right, key)
+        return node
+
+    def nodes(self):
+        res = []
+        self._nodes(self.root, res)
+        return res
+
+    def _nodes(self, node, result):
+        if node is None:
             return
-
-        node = self.root
-
-        while True:
-            if key < node.data:
-                if node.left is None:
-                    node.left = Node(key)
-                    return
-                node = node.left
-
-            elif key > node.data:
-                if node.right is None:
-                    node.right = Node(key)
-                    return
-                node = node.right
-
-            else:
-                return
-
-    def print_branches(self):
-        stack = []
-        node = self.root
-
-        while stack or node is not None:
-            while node is not None:
-                stack.append(node)
-                node = node.left
-
-            node = stack.pop()
-
-            if node.left is not None and node.right is not None:
-                print(node.data)
-
-            node = node.right
+        self._nodes(node.left, result)
+        if node.left and node.right:
+            result.append(node.data)
+        self._nodes(node.right, result)
 
 
-tree = BinarySearchTree()
 
-numbers = list(map(int, input().split()))
-
-for x in numbers:
-    if x == 0:
-        break
-    tree.insert(x)
-
-tree.print_branches()
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    numbers = list(map(int, input().split()))
+    for num in numbers:
+        if num == 0:
+            break
+        bst.insert(num)
+    res = bst.nodes()
+    print(*res, sep='\n')
