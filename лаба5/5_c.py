@@ -1,65 +1,39 @@
-
 class Node:
     def __init__(self, key):
         self.data = key
         self.left = None
         self.right = None
 
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
     def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
-            return
+        self.root = self._insert(self.root, key)
 
-        node = self.root
+    def _insert(self, node, key):
+        if node is None:
+            return Node(key)
+        if key < node.data:
+            node.left = self._insert(node.left, key)
+        elif key > node.data:
+            node.right = self._insert(node.right, key)
+        return node
 
-        while True:
-            if key < node.data:
-                if node.left is None:
-                    node.left = Node(key)
-                    return
-                node = node.left
+    def size(self):
+        return self._size(self.root)
 
-            elif key > node.data:
-                if node.right is None:
-                    node.right = Node(key)
-                    return
-                node = node.right
-
-            else:
-                return
-
-    def count(self):
-        if self.root is None:
+    def _size(self, node):
+        if node is None:
             return 0
-
-        stack = [self.root]
-        result = 0
-
-        while stack:
-            node = stack.pop()
-            result += 1
-
-            if node.left is not None:
-                stack.append(node.left)
-
-            if node.right is not None:
-                stack.append(node.right)
-
-        return result
+        return 1 + self._size(node.left) + self._size(node.right)
 
 
-tree = BinarySearchTree()
-
-numbers = list(map(int, input().split()))
-
-for x in numbers:
-    if x == 0:
-        break
-    tree.insert(x)
-
-print(tree.count())
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    numbers = list(map(int, input().split()))
+    for num in numbers:
+        if num == 0:
+            break
+        bst.insert(num)
+    print(bst.size())
