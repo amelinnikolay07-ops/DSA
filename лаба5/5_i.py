@@ -1,67 +1,60 @@
+from random import randint
+import queue
+
 class Node:
     def __init__(self, key):
         self.data = key
         self.left = None
         self.right = None
 
-
 class BinarySearchTree:
     def __init__(self):
         self.root = None
 
     def insert(self, key):
-        if self.root is None:
-            self.root = Node(key)
-            return
+        self.root = self._insert(self.root, key)
 
-        node = self.root
+    def _insert(self, node, key):
+        if node is None:
+            return Node(key)
+        if key < node.data:
+            node.left = self._insert(node.left, key)
+        elif key > node.data:
+            node.right = self._insert(node.right, key)
+        return node
 
-        while True:
-            if key < node.data:
-                if node.left is None:
-                    node.left = Node(key)
-                    return
-                node = node.left
+    def balanced(self):
+        return self._balanced(self.root)
 
-            elif key > node.data:
-                if node.right is None:
-                    node.right = Node(key)
-                    return
-                node = node.right
+    def _balanced(self, node):
+        if node is None:
+            return True
+        left_h = self._height(node.left)
+        right_h = self._height(node.right)
+        if ((abs(left_h - right_h) <= 1) and
+            self._balanced(node.left) and
+            self._balanced(node.right)):
+            return True
+        return False
 
-            else:
-                return
-
-    def check_balance(self, node):
+    def _height(self, node):
         if node is None:
             return 0
-
-        left = self.check_balance(node.left)
-
-        if left == -1:
-            return -1
-
-        right = self.check_balance(node.right)
-
-        if right == -1:
-            return -1
-
-        if abs(left - right) > 1:
-            return -1
-
-        return 1 + max(left, right)
+        return 1 + max(self._height(node.left), self._height(node.right))
 
 
-tree = BinarySearchTree()
 
-numbers = list(map(int, input().split()))
 
-for x in numbers:
-    if x == 0:
-        break
-    tree.insert(x)
 
-if tree.check_balance(tree.root) == -1:
-    print("NO")
-else:
-    print("YES")
+if __name__ == '__main__':
+    bst = BinarySearchTree()
+    numbers = list(map(int, input().split()))
+    for num in numbers:
+        if num == 0:
+            break
+        bst.insert(num)
+    res = bst.balanced()
+    if res:
+        print('YES')
+    else:
+        print('NO')
